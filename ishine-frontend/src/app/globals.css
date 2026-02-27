@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #2ea4d5;
+  --color-primary: #2ea4d5;
+  --color-primary-hover: #2389b3;
+  --color-background-light: #f8f9fc;
+  --color-background-dark: #0f1623;
+  --color-surface-light: #ffffff;
+  --color-border-light: #e2e8f0;
+  --color-text-main: #0f172a;
+  --color-text-secondary: #475569;
+
+  --font-display: "Manrope", sans-serif;
+  --font-body: "Manrope", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --background: var(--color-background-light);
+  --foreground: var(--color-text-main);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar for global application */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand);
+}
+
+/* Custom scrollbar for sidebar (legacy preservation) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand);
+}
+
+/* Mega Menu Hover Logic */
+.group:hover .mega-menu {
+  display: block;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+@keyframes scroll-right-to-left {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-rtl {
+  animation: scroll-right-to-left 30s linear infinite;
+}
+
+.animate-scroll-rtl:hover {
+  animation-play-state: paused;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Premium Custom Horizontal Scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  height: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-brand);
+  border-radius: 10px;
+}

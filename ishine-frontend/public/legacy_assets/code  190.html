@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>iShine Wireless B2B Auth Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0b4183",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101822",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Header / TopNavBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 lg:px-10">
+<div class="flex items-center gap-4 text-slate-900 dark:text-white">
+<div class="size-8 text-primary">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g>
+<path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z"></path>
+</g>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em] text-primary dark:text-white">iShine Wireless</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined mr-2 text-lg">headset_mic</span>
+<span class="truncate">Support</span>
+</button>
+<button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors shadow-sm">
+<span>Contact Us</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full px-4 py-8 md:px-8 lg:px-12 flex justify-center">
+<div class="w-full max-w-7xl flex flex-col gap-8">
+<!-- Hero / Welcome Message -->
+<div class="text-center space-y-2 mb-4">
+<h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight">Welcome to the B2B Portal</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Secure wholesale access for authorized retailers &amp; repair shops</p>
+</div>
+<!-- Two Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+<!-- Left Column: Login -->
+<div class="flex flex-col h-full">
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden h-full flex flex-col">
+<!-- Hero Image for Login -->
+<div class="h-48 w-full bg-cover bg-center relative" data-alt="Modern office with glass walls and professional lighting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBZLp7z3ZISdkPTuqki2dMoZs0R2Aoi5l-G5NnYuJdICU0B8Qj_Y4_0TpyU4sdZl8izpAutFYGumHSed75QCNYt5vH0d7KYj3w8ki_qSagk3bPfpm5_UJpOAaVmqrypVHeH7Bye7uqFJmWBXAhjB5XdzD_fF2AT-yd6b3rqdNJaDhdrLXHG0S5N8EAxf_CVcffQC8eHwkskBkAUUrAxnDcTsn7NADBvWUaXc76lHWDiAYf5d7zO6KUtnRi9Bpdydvzr0xUPKMCVZJdy");'>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+<div>
+<h3 class="text-white text-xl font-bold">Existing Customer Login</h3>
+<p class="text-slate-200 text-sm mt-1">Access your wholesale pricing and order history.</p>
+</div>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col justify-center">
+<form class="space-y-6">
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-2 block">Email Address</span>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400">mail</span>
+</div>
+<input class="form-input w-full pl-10 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-12" placeholder="name@company.com" type="email"/>
+</div>
+</label>
+<label class="block">
+<div class="flex justify-between items-center mb-2">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm">Password</span>
+<a class="text-primary hover:text-primary/80 text-sm font-medium" href="#">Forgot Password?</a>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400">lock</span>
+</div>
+<input class="form-input w-full pl-10 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-12" placeholder="••••••••" type="password"/>
+</div>
+</label>
+<div class="pt-2">
+<button class="w-full flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl h-12 transition-colors shadow-md shadow-primary/20" type="button">
+<span>Sign In</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</form>
+<div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
+<p class="text-slate-500 dark:text-slate-400 text-sm">Having trouble logging in? <a class="text-primary font-bold hover:underline" href="#">Contact Support</a></p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Registration -->
+<div class="flex flex-col h-full">
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden h-full flex flex-col relative">
+<!-- Decorative Top Border -->
+<div class="h-2 w-full bg-primary"></div>
+<div class="p-8">
+<div class="mb-6">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Wholesale Account Application</h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Join our network of 5,000+ repair shops and retailers.</p>
+</div>
+<form class="space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-1.5 block">First Name</span>
+<input class="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-11 px-4" placeholder="John" type="text"/>
+</label>
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-1.5 block">Last Name</span>
+<input class="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-11 px-4" placeholder="Doe" type="text"/>
+</label>
+</div>
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-1.5 block">Company Name</span>
+<input class="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-11 px-4" placeholder="iRepair Solutions LLC" type="text"/>
+</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-1.5 block">Business Email</span>
+<input class="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-11 px-4" placeholder="purchasing@irepair.com" type="email"/>
+</label>
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-1.5 block">Phone Number</span>
+<input class="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-11 px-4" placeholder="(555) 123-4567" type="tel"/>
+</label>
+</div>
+<label class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-1.5 block">Tax ID / Reseller Number</span>
+<input class="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-11 px-4" placeholder="XX-XXXXXXX" type="text"/>
+</label>
+<!-- File Upload -->
+<div class="block">
+<span class="text-slate-700 dark:text-slate-300 font-medium text-sm mb-2 block">Upload Reseller Certificate</span>
+<div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-700 border-dashed rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<div class="space-y-1 text-center">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-3xl">cloud_upload</span>
+<div class="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
+<label class="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary/80 focus-within:outline-none" for="file-upload">
+<span>Upload a file</span>
+<input class="sr-only" id="file-upload" name="file-upload" type="file"/>
+</label>
+<p class="pl-1">or drag and drop</p>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-500">PDF, PNG, JPG up to 10MB</p>
+</div>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl h-12 transition-colors shadow-md shadow-primary/20" type="button">
+<span>Submit Application</span>
+</button>
+<p class="text-xs text-slate-400 dark:text-slate-500 text-center mt-3">By submitting, you agree to our <a class="underline hover:text-primary" href="#">Terms of Service</a> and <a class="underline hover:text-primary" href="#">Privacy Policy</a>.</p>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Indicators -->
+<div class="py-8 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl text-slate-600 dark:text-slate-400">verified_user</span>
+<span class="font-bold text-slate-600 dark:text-slate-400">Secure B2B</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl text-slate-600 dark:text-slate-400">local_shipping</span>
+<span class="font-bold text-slate-600 dark:text-slate-400">Same Day Shipping</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl text-slate-600 dark:text-slate-400">price_check</span>
+<span class="font-bold text-slate-600 dark:text-slate-400">Wholesale Pricing</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>
