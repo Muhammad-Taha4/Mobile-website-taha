@@ -7,7 +7,7 @@ declare global {
     namespace Express {
         interface Request {
             user?: {
-                id: string;
+                id: number;
                 email: string;
                 role: string;
             };
@@ -31,15 +31,15 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         const token = authHeader.split(' ')[1];
         const secret = process.env.JWT_SECRET || 'fallback_secret';
 
-        const decoded = jwt.verify(token, secret) as { id: string; email: string; role: string };
+        const decoded = jwt.verify(token, secret) as { id: number; email: string; role: string };
 
         // Verify user still exists and is active
         const user = await prisma.user.findUnique({
             where: { id: decoded.id },
-            select: { id: true, email: true, role: true, isActive: true },
+            select: { id: true, email: true, role: true, status: true },
         });
 
-        if (!user || !user.isActive) {
+        if (!user || user.status !== 'active') {
             res.status(401).json({ message: 'User account is deactivated or does not exist.' });
             return;
         }
@@ -56,7 +56,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
  * Must be used AFTER the `authenticate` middleware.
  */
 export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user || req.user.role !== 'ADMIN') {
+    if (!req.user || req.user.role !== 'admin') {
         res.status(403).json({ message: 'Access denied. Admin privileges required.' });
         return;
     }

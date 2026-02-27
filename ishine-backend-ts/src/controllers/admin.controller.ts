@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 
-/**
- * GET /api/admin/stats
- */
 export const getAdminStats = async (req: Request, res: Response): Promise<void> => {
     try {
         const thirtyDaysAgo = new Date();
@@ -18,8 +15,8 @@ export const getAdminStats = async (req: Request, res: Response): Promise<void> 
         ] = await Promise.all([
             // Revenue (30d)
             prisma.order.aggregate({
-                where: { createdAt: { gte: thirtyDaysAgo }, status: { not: 'CANCELLED' } },
-                _sum: { totalAmount: true }
+                where: { createdAt: { gte: thirtyDaysAgo }, status: { not: 'cancelled' } },
+                _sum: { total: true }
             }),
             // Total Orders (30d)
             prisma.order.count({
@@ -27,23 +24,23 @@ export const getAdminStats = async (req: Request, res: Response): Promise<void> 
             }),
             // Total Active Users
             prisma.user.count({
-                where: { isActive: true }
+                where: { status: 'active' }
             }),
             // Pending Shipments
             prisma.order.count({
-                where: { status: 'PROCESSING' } // Assuming processing = pending shipment
+                where: { status: 'pending' }
             }),
             // Recent Orders for Activity Feed
             prisma.order.findMany({
                 take: 10,
                 orderBy: { createdAt: 'desc' },
-                include: { user: { select: { firstName: true, lastName: true, businessName: true } } }
+                include: { user: { select: { name: true, businessName: true } } }
             })
         ]);
 
         res.json({
             stats: {
-                totalRevenue: Number(revenue._sum.totalAmount || 0),
+                totalRevenue: Number(revenue._sum.total || 0),
                 totalOrders: orderCount,
                 activeUsers: userCount,
                 pendingShipments: pendingOrders

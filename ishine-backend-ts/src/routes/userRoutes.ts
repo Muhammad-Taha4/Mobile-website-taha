@@ -1,18 +1,22 @@
 import { Router } from 'express';
-import { register, login, getMe } from '../controllers/auth.controller';
-import { getUsers, updateUser, deleteUser } from '../controllers/user.controller';
-import { authenticate, isAdmin } from '../middlewares/auth';
+import {
+    getUserProfile, updateUserProfile, updateUserPassword,
+    getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress,
+    avatarUpload
+} from '../controllers/user.controller';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
-// Auth routes
-router.post('/register', register);
-router.post('/login', login);
-router.get('/me', authenticate, getMe);
+// User Profile
+router.get('/profile', authenticate, getUserProfile);
+router.put('/profile', authenticate, avatarUpload.single('avatar'), updateUserProfile);
+router.put('/password', authenticate, updateUserPassword);
 
-// Admin routes
-router.get('/', authenticate, isAdmin, getUsers);
-router.patch('/:id', authenticate, isAdmin, updateUser);
-router.delete('/:id', authenticate, isAdmin, deleteUser);
+// User Addresses
+router.get('/addresses', authenticate, getUserAddresses);
+router.post('/addresses', authenticate, addUserAddress);
+router.put('/addresses/:id', authenticate, updateUserAddress);
+router.delete('/addresses/:id', authenticate, deleteUserAddress);
 
 export default router;

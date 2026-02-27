@@ -38,8 +38,9 @@ export const getCategories = async (_req: Request, res: Response): Promise<void>
  */
 export const getCategoryById = async (req: Request, res: Response): Promise<void> => {
     try {
+        const id = parseInt(req.params.id as string);
         const category = await prisma.category.findUnique({
-            where: { id: req.params.id as string },
+            where: { id },
             include: {
                 children: { where: { isActive: true } },
                 products: { where: { isActive: true }, take: 20 },
@@ -77,8 +78,9 @@ export const createCategory = async (req: Request, res: Response): Promise<void>
  */
 export const updateCategory = async (req: Request, res: Response): Promise<void> => {
     try {
+        const id = parseInt(req.params.id as string);
         const category = await prisma.category.update({
-            where: { id: req.params.id as string },
+            where: { id },
             data: req.body,
         });
         res.json({ message: 'Category updated', category });
@@ -93,8 +95,9 @@ export const updateCategory = async (req: Request, res: Response): Promise<void>
  */
 export const deleteCategory = async (req: Request, res: Response): Promise<void> => {
     try {
+        const id = parseInt(req.params.id as string);
         await prisma.category.update({
-            where: { id: req.params.id as string },
+            where: { id },
             data: { isActive: false },
         });
         res.json({ message: 'Category deactivated' });

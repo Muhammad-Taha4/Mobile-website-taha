@@ -6,12 +6,11 @@ import { prisma } from '../config/prisma';
  */
 export const getBrands = async (_req: Request, res: Response): Promise<void> => {
     try {
-        const brands = await prisma.product.findMany({
-            select: { brand: true },
-            distinct: ['brand'],
+        const brands = await prisma.brand.findMany({
+            where: { isActive: true },
+            orderBy: { sortOrder: 'asc' }
         });
-        const brandList = brands.map(b => b.brand).filter(Boolean);
-        res.json(brandList);
+        res.json(brands);
     } catch (error) {
         console.error('GetBrands error:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -35,24 +34,21 @@ export const getAllCategories = async (_req: Request, res: Response): Promise<vo
 
 /**
  * GET /api/admin/taxonomy/models (Admin only)
- * This is a helper for cascading selection. 
- * Since we don't have a Model table yet, we extract from compatibility or products.
  */
 export const getModels = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { brand, categoryId } = req.query;
-        // Optimization: return a fixed known list for demo purposes if DB is empty on models
-        const models = await prisma.product.findMany({
-            where: { 
-                brand: brand as string,
-                categoryId: categoryId as string
-            },
-            select: { compatibility: true },
-            distinct: ['compatibility']
+        const { brandId } = req.query;
+        const where: any = { isActive: true };
+
+        if (brandId) {
+            where.brandId = parseInt(brandId as string);
+        }
+
+        const models = await prisma.model.findMany({
+            where,
+            orderBy: { sortOrder: 'asc' }
         });
-        const modelList = models.flatMap(m => m.compatibility?.split(',')).map(s => s?.trim()).filter(Boolean);
-        const uniqueModels = Array.from(new Set(modelList));
-        res.json(uniqueModels);
+        res.json(models);
     } catch (error) {
         console.error('GetModels error:', error);
         res.status(500).json({ message: 'Internal server error' });

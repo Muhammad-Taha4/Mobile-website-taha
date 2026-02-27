@@ -1,27 +1,24 @@
 import { Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 
-/**
- * POST /api/orders
- * Create a new order from the cart.
- */
 export const createOrder = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { items, shippingAddress, shippingCity, shippingState, shippingZip, shippingCountry, shippingMethod, paymentMethod, notes } = req.body;
+        const { items, shippingAddress, shippingMethod, paymentMethod, notes } = req.body;
 
         if (!items || items.length === 0) {
             res.status(400).json({ message: 'Order must contain at least one item.' });
             return;
         }
 
-        // Calculate totals
         let subtotal = 0;
-        const orderItems: { productId: string; quantity: number; unitPrice: number; totalPrice: number }[] = [];
+        const orderItems: any[] = [];
 
         for (const item of items) {
-            const product = await prisma.product.findUnique({ where: { id: item.productId } });
+            const productId = parseInt(item.productId);
+            const product = await prisma.product.findUnique({ where: { id: productId } });
+
             if (!product) {
-                res.status(404).json({ message: `Product ${item.productId} not found.` });
+                res.status(404).json({ message: `Product ${productId} not found.` });
                 return;
             }
             if (product.stock < item.quantity) {
@@ -34,40 +31,37 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
             subtotal += totalPrice;
 
             orderItems.push({
-                productId: item.productId,
+                productId: product.id,
+                productName: product.name,
+                productSku: product.sku,
+                productImage: Array.isArray(product.images) && product.images.length > 0 ? (product.images as any)[0] : null,
                 quantity: item.quantity,
                 unitPrice,
                 totalPrice,
             });
         }
 
-        const tax = subtotal * 0.08; // 8% tax
-        const shippingCost = subtotal > 500 ? 0 : 25; // Free shipping over $500
-        const totalAmount = subtotal + tax + shippingCost;
+        const tax = subtotal * 0.08;
+        const shipping = subtotal > 500 ? 0 : 25;
+        const total = subtotal + tax + shipping;
 
-        // Generate order number
         const date = new Date();
         const dateStr = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
         const orderCount = await prisma.order.count();
         const orderNumber = `ISW-${dateStr}-${String(orderCount + 1).padStart(4, '0')}`;
 
-        // Create order with items in a transaction
         const order = await prisma.$transaction(async (tx: any) => {
             const newOrder = await tx.order.create({
                 data: {
                     orderNumber,
-                    userId: req.user!.id,
+                    userId: (req as any).user.id,
                     subtotal,
                     tax,
-                    shippingCost,
-                    totalAmount,
+                    shipping,
+                    total,
                     shippingAddress,
-                    shippingCity,
-                    shippingState,
-                    shippingZip,
-                    shippingCountry: shippingCountry || 'US',
-                    shippingMethod,
-                    paymentMethod,
+                    shippingMethod: shippingMethod || 'standard',
+                    paymentMethod: paymentMethod || 'credit_card',
                     notes,
                     items: {
                         create: orderItems,
@@ -76,7 +70,6 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
                 include: { items: { include: { product: true } } },
             });
 
-            // Decrement stock
             for (const item of orderItems) {
                 await tx.product.update({
                     where: { id: item.productId },
@@ -94,28 +87,25 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-/**
- * GET /api/orders
- * List orders (admin: all, customer: own orders).
- */
 export const getOrders = async (req: Request, res: Response): Promise<void> => {
     try {
         const { page = '1', limit = '20', status } = req.query;
-        const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
+        const take = parseInt(limit as string);
+        const skip = (parseInt(page as string) - 1) * take;
 
         const where: any = {};
-        if (req.user!.role !== 'ADMIN') where.userId = req.user!.id;
+        if ((req as any).user.role !== 'admin') where.userId = (req as any).user.id;
         if (status) where.status = status;
 
-        const [orders, total] = await Promise.all([
+        const [orders, totalRecords] = await Promise.all([
             prisma.order.findMany({
                 where,
                 include: {
                     items: { include: { product: { select: { name: true, sku: true, images: true } } } },
-                    user: { select: { firstName: true, lastName: true, email: true, businessName: true } },
+                    user: { select: { name: true, email: true, businessName: true } },
                 },
                 skip,
-                take: parseInt(limit as string),
+                take,
                 orderBy: { createdAt: 'desc' },
             }),
             prisma.order.count({ where }),
@@ -125,9 +115,9 @@ export const getOrders = async (req: Request, res: Response): Promise<void> => {
             orders,
             pagination: {
                 page: parseInt(page as string),
-                limit: parseInt(limit as string),
-                total,
-                totalPages: Math.ceil(total / parseInt(limit as string)),
+                limit: take,
+                total: totalRecords,
+                totalPages: Math.ceil(totalRecords / take),
             },
         });
     } catch (error) {
@@ -136,19 +126,19 @@ export const getOrders = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-/**
- * GET /api/orders/:id
- */
 export const getOrderById = async (req: Request, res: Response): Promise<void> => {
     try {
-        const where: any = { id: req.params.id };
-        if (req.user!.role !== 'ADMIN') where.userId = req.user!.id;
+        const id = parseInt(req.params.id as string);
+        if (isNaN(id)) { res.status(400).json({ message: 'Invalid order ID' }); return; }
+
+        const where: any = { id };
+        if ((req as any).user.role !== 'admin') where.userId = (req as any).user.id;
 
         const order = await prisma.order.findFirst({
             where,
             include: {
                 items: { include: { product: true } },
-                user: { select: { firstName: true, lastName: true, email: true, businessName: true } },
+                user: { select: { name: true, email: true, businessName: true } },
             },
         });
 
@@ -164,21 +154,61 @@ export const getOrderById = async (req: Request, res: Response): Promise<void> =
     }
 };
 
-/**
- * PATCH /api/orders/:id/status (Admin only)
- */
 export const updateOrderStatus = async (req: Request, res: Response): Promise<void> => {
     try {
+        const id = parseInt(req.params.id as string);
         const { status } = req.body;
 
+        if (isNaN(id)) { res.status(400).json({ message: 'Invalid order ID' }); return; }
+
         const order = await prisma.order.update({
-            where: { id: req.params.id as string },
+            where: { id },
             data: { status },
         });
 
         res.json({ message: `Order status updated to ${status}`, order });
     } catch (error) {
         console.error('UpdateOrderStatus error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const trackOrder = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { orderNumber, email } = req.query;
+
+        if (!orderNumber || !email) {
+            res.status(400).json({ message: 'Order number and email are required' });
+            return;
+        }
+
+        const order = await prisma.order.findFirst({
+            where: {
+                orderNumber: orderNumber as string,
+                user: { email: email as string }
+            },
+            include: {
+                user: { select: { name: true } },
+                items: true
+            }
+        });
+
+        if (!order) {
+            res.status(404).json({ message: 'Order not found or email mismatch' });
+            return;
+        }
+
+        res.json({
+            orderNumber: order.orderNumber,
+            status: order.status,
+            createdAt: order.createdAt,
+            shippingMethod: order.shippingMethod,
+            trackingNumber: order.trackingNumber,
+            subtotal: order.subtotal,
+            total: order.total
+        });
+    } catch (error) {
+        console.error('TrackOrder error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
